@@ -78,7 +78,7 @@ html,body{margin:0;min-height:100%;background:linear-gradient(#f6d9cf,#fbe9e1);f
 .ok p{font-size:max(15px,calc(var(--s)*22));margin:8px 0;font-style:italic;color:var(--crim);font-weight:500}
 .ok .sm{font-style:normal;color:#4d2330;font-size:max(14px,calc(var(--s)*19))}
 .ok a,.ok button{display:inline-block;margin:10px 6px 0;font:600 max(14px,calc(var(--s)*19)) var(--serif);padding:10px 22px;border-radius:30px;border:1.5px solid var(--crim);color:var(--crim);background:#fff3ee;text-decoration:none;cursor:pointer}
-.ok a.wa,.ok button.wa{background:var(--crim);color:#fff}.ok button:disabled{opacity:.6;cursor:default}
+.ok a.wa{background:var(--crim);color:#fff}
 .noscript{padding:30px;text-align:center}
 @container (max-width:560px){.foot{background-size:720px auto;min-height:284px;padding-bottom:110px}.top p{top:77%}}
 </style></head>
@@ -102,7 +102,7 @@ function App(){
  const [a,setA]=useState({eng:"",haldi:"",wed:""});
  const [c,setC]=useState({eng:"",haldi:"",wed:""});
  const [er,setEr]=useState({});
- const [done,setDone]=useState(false);const [st,setSt]=useState({});const [busy,setBusy]=useState(false);
+ const [done,setDone]=useState(false);const [busy,setBusy]=useState(false);
  const pick=(k,v)=>{setA({...a,[k]:a[k]===v?"":v});if(v==="no")setC({...c,[k]:""});};
  const submit=e=>{e.preventDefault();const x={};
   if(!f.name.trim())x.name="Please enter your guest / family name.";
@@ -122,16 +122,9 @@ function App(){
   L.push("","Submitted: "+new Date().toLocaleString());return L.join("\n");};
  const msg=()=>{let m="Wedding RSVP – "+f.name+" ("+f.total+" guests)%0A";
   ROWS.forEach(([k,n])=>{m+=encodeURIComponent(n+": "+(a[k]==="yes"?"Attending ("+c[k]+")":"Not attending"))+"%0A";});return m;};
- const WA_ENDPOINT="";/* TODO: set to your WhatsApp gateway URL (Twilio / WhatsApp Cloud API proxy). Receives JSON {to,message}. */
- const sendVia=ch=>{setSt(s=>({...s,[ch]:"sending"}));let p;
-  if(ch==="email")p=fetch("https://formsubmit.co/ajax/shraddha.kulshrestha@gmail.com",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify({_subject:"Wedding RSVP – "+f.name.trim(),_template:"table",_captcha:"false","Guest / Family Name":f.name.trim(),"Message":txt()})}).then(r=>r.json()).then(j=>{if(String(j.success)!=="true")throw 0;});
-  else p=WA_ENDPOINT?fetch(WA_ENDPOINT,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({to:"919650750814",message:txt()})}).then(r=>{if(!r.ok)throw 0;}):Promise.reject();
-  p.then(()=>setSt(s=>({...s,[ch]:"sent"}))).catch(()=>setSt(s=>({...s,[ch]:"fail"})));};
- const lbl=(ch,n)=>st[ch]==="sending"?"Sending…":st[ch]==="sent"?"Sent ✓":st[ch]==="fail"?"Failed – Retry":n;
  const body=done?h("div",{className:"box ok"},h(Rib,{t:"RSVP RECEIVED"}),h("h2",null,"Thank You, "+f.name.trim()+"!"),
-   h("p",null,done==="fail"?"We could not send your RSVP automatically. Please use a button below to send it.":"Your RSVP has been sent to the family. We look forward to celebrating with you."),
-   h("p",{className:"sm"},"Please also send your response to the family so it reaches us:"),
-   h("div",null,h("button",{type:"button",className:"wa",disabled:st.wa==="sending"||st.wa==="sent",onClick:()=>sendVia("wa")},lbl("wa","Send via WhatsApp")),h("button",{type:"button",disabled:st.email==="sending"||st.email==="sent",onClick:()=>sendVia("email")},lbl("email","Send via Email")),h("button",{type:"button",onClick:()=>setDone(false)},"Edit Response")))
+    h("p",null,done==="fail"?"Your RSVP could not be submitted. Please check your connection and try again.":"Your RSVP has been successfully submitted. We look forward to celebrating with you."),
+    h("div",null,h("button",{type:"button",onClick:()=>setDone(false)},"Edit Response")))
   :[
   h("div",{key:"g",className:"box guest"},h(Rib,{t:"Guest Details"}),
    h("div",{className:"fld"},h("label",{htmlFor:"gn"},"Guest / Family Name:"),h("input",{id:"gn",value:f.name,onChange:e=>setF({...f,name:e.target.value}),autoComplete:"name"})),
