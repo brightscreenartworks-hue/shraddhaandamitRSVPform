@@ -54,9 +54,10 @@ html,body{margin:0;min-height:100%;background:linear-gradient(#f6d9cf,#fbe9e1);f
 .vr .box{text-align:center;padding-top:calc(var(--s)*40);margin-top:calc(var(--s)*28)}
 .vr .box>div{margin:0 auto}
 .pin{width:max(16px,calc(var(--s)*22));height:auto;display:block;margin:calc(var(--s)*-4) auto 2px}
-.vn{font-weight:700;color:var(--crim);font-size:max(13px,calc(var(--s)*19))}
+.vn{font-weight:700;color:var(--crim);font-size:max(17px,calc(var(--s)*27));line-height:1.2;margin-bottom:calc(var(--s)*8)}
 .va{font-weight:500;color:#4d2330;font-size:max(12px,calc(var(--s)*17));line-height:1.3}
-.qr{width:calc(var(--s)*100);min-width:70px;height:auto;display:block;margin:calc(var(--s)*10) auto 4px;border-radius:50%}
+.mapbtn{display:inline-block;margin-top:calc(var(--s)*22);font:700 max(12px,calc(var(--s)*17)) var(--serif);letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:#fff;background:linear-gradient(#c21a6c,#9f0f55);border:2px solid var(--gold);padding:calc(var(--s)*12) calc(var(--s)*30);border-radius:40px;box-shadow:0 4px 14px rgba(160,15,85,.3);min-height:40px;box-sizing:border-box;line-height:1.4}
+.mapbtn:hover{filter:brightness(1.08)}
 .acc p{margin:0 0 calc(var(--s)*14);font-style:italic;font-weight:500;color:var(--crim);font-size:max(12px,calc(var(--s)*18.5));line-height:1.3}
 .acc .ap{margin-top:calc(var(--s)*12)}.acc .ni{margin-top:calc(var(--s)*6);text-align:left}.acc .opt{display:flex;gap:calc(var(--s)*14);flex-wrap:wrap;font-weight:500;color:#4d2330;font-size:max(11px,calc(var(--s)*16))}.acc .opt label{display:flex;align-items:center;gap:6px}.acc .opt .cb i{width:max(16px,calc(var(--s)*19));height:max(16px,calc(var(--s)*19))}.acc .ci{font-weight:600;color:var(--crim);font-size:max(12px,calc(var(--s)*18));font-style:normal;line-height:1.5}
 .sub{text-align:center;height:max(80px,calc(var(--s)*100));padding-top:calc(var(--s)*28)}
@@ -145,7 +146,7 @@ function App(){
     h("svg",{className:"pin",viewBox:"0 0 24 32"},h("path",{d:"M12 0C5.4 0 0 5.2 0 11.7 0 20 12 32 12 32s12-12 12-20.3C24 5.2 18.600 0 12 0zm0 16a4.500 4.500 0 110-9 4.500 4.500 0 010 9z",fill:"#b0125c"})),
     h("div",{className:"vn"},"Golden Blossom Imperial Resorts"),
     h("div",{className:"va"},"Anora Village, Faizabad Road,",h("br"),"Lucknow, U.P."),
-    h("img",{className:"qr",src:IMG.qr,alt:"QR code for venue location"}),h("div",{className:"va"},"Scan for Location")),
+    h("a",{className:"mapbtn",href:"https://maps.app.goo.gl/Tarr9RmTga37EHY9A",target:"_blank",rel:"noopener noreferrer"},"View Location")),
    h("div",{className:"box acc"},h(Rib,{t:"Accommodation Preference"}),
     h("p",null,"To make your stay comfortable, accommodation has been thoughtfully arranged for our guests at Golden Blossom Imperial Resorts."),
     h("div",{className:"ci"},"Check-in: 2:00 PM on 25",h("sup",null,"th")," January, 2027"),
