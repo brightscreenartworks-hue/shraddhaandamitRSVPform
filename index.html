@@ -50,7 +50,7 @@ html,body{margin:0;min-height:100%;background:linear-gradient(#f6d9cf,#fbe9e1);f
 .cnt:disabled{opacity:.35;cursor:not-allowed}
 .rowerr{padding:2px calc(var(--s)*16);background:var(--cell);border-top:1px dashed var(--line)}
 .rowerr .err{margin:2px 0}
-.vr{display:grid;grid-template-columns:396fr 341fr;gap:calc(var(--s)*13);margin-top:calc(var(--s)*8)}
+.vr{display:grid;grid-template-columns:290fr 447fr;gap:calc(var(--s)*13);margin-top:calc(var(--s)*8)}
 .vr .box{text-align:center;padding-top:calc(var(--s)*40);margin-top:calc(var(--s)*28)}
 .vr .box>div{margin:0 auto}
 .pin{width:max(16px,calc(var(--s)*22));height:auto;display:block;margin:calc(var(--s)*-4) auto 2px}
@@ -58,7 +58,7 @@ html,body{margin:0;min-height:100%;background:linear-gradient(#f6d9cf,#fbe9e1);f
 .va{font-weight:500;color:#4d2330;font-size:max(12px,calc(var(--s)*17));line-height:1.3}
 .qr{width:calc(var(--s)*100);min-width:70px;height:auto;display:block;margin:calc(var(--s)*10) auto 4px;border-radius:50%}
 .acc p{margin:0 0 calc(var(--s)*14);font-style:italic;font-weight:500;color:var(--crim);font-size:max(12px,calc(var(--s)*18.5));line-height:1.3}
-.acc .ci{font-weight:600;color:var(--crim);font-size:max(12px,calc(var(--s)*18));font-style:normal;line-height:1.5}
+.acc .ap{margin-top:calc(var(--s)*12)}.acc .ni{margin-top:calc(var(--s)*6);text-align:left}.acc .opt{display:flex;gap:calc(var(--s)*14);flex-wrap:wrap;font-weight:500;color:#4d2330;font-size:max(11px,calc(var(--s)*16))}.acc .opt label{display:flex;align-items:center;gap:6px}.acc .opt .cb i{width:max(16px,calc(var(--s)*19));height:max(16px,calc(var(--s)*19))}.acc .ci{font-weight:600;color:var(--crim);font-size:max(12px,calc(var(--s)*18));font-style:normal;line-height:1.5}
 .sub{text-align:center;height:max(80px,calc(var(--s)*100));padding-top:calc(var(--s)*28)}
 .btn{font:700 max(15px,calc(var(--s)*22)) var(--serif);letter-spacing:.14em;text-transform:uppercase;color:#fff;background:linear-gradient(#c21a6c,#9f0f55);border:2px solid var(--gold);padding:calc(var(--s)*14) calc(var(--s)*50);border-radius:40px;cursor:pointer;box-shadow:0 4px 14px rgba(160,15,85,.3);min-height:44px}
 .btn:hover{filter:brightness(1.08)}
@@ -101,7 +101,7 @@ function App(){
  const [f,setF]=useState({name:"",total:""});
  const [a,setA]=useState({eng:"",haldi:"",wed:""});
  const [c,setC]=useState({eng:"",haldi:"",wed:""});
- const [er,setEr]=useState({});
+ const [er,setEr]=useState({});const [ac,setAc]=useState({n25:"",n26:""});
  const [done,setDone]=useState(false);const [busy,setBusy]=useState(false);
  const pick=(k,v)=>{setA({...a,[k]:a[k]===v?"":v});if(v==="no")setC({...c,[k]:""});};
  const submit=e=>{e.preventDefault();const x={};
@@ -111,7 +111,7 @@ function App(){
    else if(a[k]==="yes"){const g=parseInt(c[k],10);if(!(g>=1))x[k]="Please enter the number of guests attending.";else if(t>=1&&g>t)x[k]="Guests cannot exceed the total ("+t+").";}});
   setEr(x);
   if(Object.keys(x).length)setTimeout(()=>{const el=document.querySelector(".err");el&&el.scrollIntoView({behavior:"smooth",block:"center"});},50);
-  else{setBusy(true);const pl={_subject:"Wedding RSVP – "+f.name.trim(),_template:"table",_captcha:"false","Guest / Family Name":f.name.trim(),"Total Guests":f.total,"Message":txt()};
+  else{setBusy(true);const pl={_subject:"Wedding RSVP – "+f.name.trim(),_template:"table",_captcha:"false","Guest / Family Name":f.name.trim(),"Total Guests":f.total,"Message":txt()};pl["Accommodation – night of 25 Jan 2027"]=ac.n25==="yes"?"Required":ac.n25==="no"?"Not required":"No response";pl["Accommodation – night of 26 Jan 2027"]=ac.n26==="yes"?"Required":ac.n26==="no"?"Not required":"No response";
    ROWS.forEach(([k,n])=>{pl[n]=a[k]==="yes"?"Attending – "+c[k]+" guest(s)":"Not attending";});
    fetch("https://formsubmit.co/ajax/shraddha.kulshrestha@gmail.com",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(pl)})
    .then(r=>r.json()).then(j=>{setBusy(false);setDone(String(j.success)==="true"?"sent":"fail");}).catch(()=>{setBusy(false);setDone("fail");});
@@ -119,7 +119,7 @@ function App(){
  };
  const txt=()=>{const L=["Wedding RSVP","","Guest / Family Name: "+f.name.trim(),"Total Number of Guests: "+f.total,"","Celebrations:"];
   ROWS.forEach(([k,n,d])=>L.push("- "+n+" ("+d+" January, 2027): "+(a[k]==="yes"?"ATTENDING – "+c[k]+" guest(s)":"NOT ATTENDING")));
-  L.push("","Submitted: "+new Date().toLocaleString());return L.join("\n");};
+  L.push("","Accommodation – night of 25 Jan: "+(ac.n25==="yes"?"Required":ac.n25==="no"?"Not required":"No response"),"Accommodation – night of 26 Jan: "+(ac.n26==="yes"?"Required":ac.n26==="no"?"Not required":"No response"),"","Submitted: "+new Date().toLocaleString());return L.join("\n");};
  const msg=()=>{let m="Wedding RSVP – "+f.name+" ("+f.total+" guests)%0A";
   ROWS.forEach(([k,n])=>{m+=encodeURIComponent(n+": "+(a[k]==="yes"?"Attending ("+c[k]+")":"Not attending"))+"%0A";});return m;};
  const body=done?h("div",{className:"box ok"},h(Rib,{t:"RSVP RECEIVED"}),h("h2",null,"Thank You, "+f.name.trim()+"!"),
@@ -141,15 +141,21 @@ function App(){
      h("div",null,h("input",{className:"cnt",inputMode:"numeric",disabled:a[k]!=="yes",value:c[k],placeholder:a[k]==="yes"?"0":"",onChange:e=>setC({...c,[k]:dig(e.target.value)}),"aria-label":n+" number of guests"}))),
     er[k]&&h("div",{className:"rowerr"},h("div",{className:"err"},er[k]))))),
   h("div",{key:"v",className:"vr"},
-   h("div",{className:"box"},h(Rib,{t:"Venue"}),
+   h("div",{className:"box"},h(Rib,{t:"Venue Location"}),
     h("svg",{className:"pin",viewBox:"0 0 24 32"},h("path",{d:"M12 0C5.4 0 0 5.2 0 11.7 0 20 12 32 12 32s12-12 12-20.3C24 5.2 18.600 0 12 0zm0 16a4.500 4.500 0 110-9 4.500 4.500 0 010 9z",fill:"#b0125c"})),
     h("div",{className:"vn"},"Golden Blossom Imperial Resorts"),
     h("div",{className:"va"},"Anora Village, Faizabad Road,",h("br"),"Lucknow, U.P."),
     h("img",{className:"qr",src:IMG.qr,alt:"QR code for venue location"}),h("div",{className:"va"},"Scan for Location")),
-   h("div",{className:"box acc"},h(Rib,{t:"Accommodation"}),
+   h("div",{className:"box acc"},h(Rib,{t:"Accommodation Preference"}),
     h("p",null,"To make your stay comfortable, accommodation has been thoughtfully arranged for our guests at Golden Blossom Imperial Resorts."),
-    h("div",{className:"ci"},"Check-in: 25",h("sup",null,"th")," January, 2027"),
-    h("div",{className:"ci"},"Check-out: 27",h("sup",null,"th")," January, 2027"))),
+    h("div",{className:"ci"},"Check-in: 2:00 PM on 25",h("sup",null,"th")," January, 2027"),
+    h("div",{className:"ci"},"Check-out: 11:00 AM on 27",h("sup",null,"th")," January, 2027"),
+    h("p",{className:"ap"},"To help us make your stay comfortable, kindly indicate your accommodation preference."),
+    [["n25","25"],["n26","26"]].map(([k,d])=>h("div",{key:k,className:"ni"},
+     h("div",{className:"ci"},"For the night of "+d,h("sup",null,"th")," January, 2027:"),
+     h("div",{className:"opt"},
+      h("label",null,h(Cb,{on:ac[k]==="yes",set:()=>setAc({...ac,[k]:ac[k]==="yes"?"":"yes"}),label:"Accommodation required for night of "+d+" January"}),"Yes, accommodation required"),
+      h("label",null,h(Cb,{on:ac[k]==="no",set:()=>setAc({...ac,[k]:ac[k]==="no"?"":"no"}),label:"No accommodation for night of "+d+" January"}),"No, thank you")))))),
   h("div",{key:"s",className:"sub"},h("button",{className:"btn",type:"submit",disabled:busy},busy?"Sending…":"Submit RSVP"))];
  return h("div",{className:"card"},h("div",{className:"in"},
   h("div",{className:"top"},h("h1",null,"RSVP"),h("p",null,"Kindly confirm your presence for the festivities below.")),
